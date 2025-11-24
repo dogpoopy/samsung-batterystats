@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     """
                     1. Tap 'Run dumpstate/logcat'
                     2. Wait 2-3 minutes until completion and select 'OK'
-                    3. Now, select 'Copy to sdcard(include CP Ramdump'
+                    3. Now, select 'Copy to sdcard(include CP Ramdump)'
                     4. Come back to this app and tap 'Read Battery Logs'
                     """.trimIndent()
                 )
