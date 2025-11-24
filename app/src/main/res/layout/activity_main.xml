@@ -30,6 +30,34 @@
             android:gravity="center"
             android:layout_marginBottom="32dp"/>
 
+        <!-- Disclaimer Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#FFF9E6">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ℹ️ Battery data is extracted from the system logs report and represents an estimation. Actual values may vary."
+                    android:textSize="13sp"
+                    android:textColor="#856404"
+                    android:lineSpacingExtra="2dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Instructions Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -48,7 +76,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📋 Instructions"
+                    android:text="📋 How to Use"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -57,7 +85,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1️⃣ Tap 'Open SysDump' button below"
+                    android:text="1️⃣ Tap 'OPEN SYSDUMP' button below"
                     android:textSize="14sp"
                     android:textColor="#555555"
                     android:layout_marginBottom="6dp"/>
@@ -73,7 +101,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="3️⃣ Wait 2-3 minutes for completion then select 'OK'"
+                    android:text="3️⃣ Wait 2-3 minutes for completion, then select 'OK'"
                     android:textSize="14sp"
                     android:textColor="#555555"
                     android:layout_marginBottom="6dp"/>
@@ -81,7 +109,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4️⃣ Now, select 'Copy to sdcard(include CP Ramdump)'"
+                    android:text="4️⃣ Select 'Copy to sdcard(include CP Ramdump)'"
                     android:textSize="14sp"
                     android:textColor="#555555"
                     android:layout_marginBottom="6dp"/>
@@ -89,7 +117,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="5️⃣ Return here and tap 'Read Battery Logs'"
+                    android:text="5️⃣ Return here and tap 'READ BATTERY LOGS'"
                     android:textSize="14sp"
                     android:textColor="#555555"/>
 
@@ -107,7 +135,7 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/button_primary"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:elevation="2dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -119,6 +147,18 @@
             android:textStyle="bold"
             android:textColor="#1976D2"
             android:background="@drawable/button_secondary"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDeleteLogs"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Delete Log Files"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#D32F2F"
+            android:background="@drawable/button_delete"
             android:layout_marginBottom="24dp"
             android:elevation="2dp"/>
 
@@ -208,7 +248,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⚠️ Note: This app only works on Samsung devices with SysDump access"
+            android:text="⚠️ This app only works on Samsung devices with SysDump access"
             android:textSize="12sp"
             android:textColor="#757575"
             android:gravity="center"

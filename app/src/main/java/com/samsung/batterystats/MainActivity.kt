@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.*
 import java.io.File
-import java.io.RandomAccessFile
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnOpenSysDump: Button
     private lateinit var btnReadLogs: Button
+    private lateinit var btnDeleteLogs: Button
     private lateinit var tvFirstUseDate: TextView
     private lateinit var tvBatteryHealth: TextView
     private lateinit var tvChargeCycles: TextView
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         btnOpenSysDump = findViewById(R.id.btnOpenSysDump)
         btnReadLogs = findViewById(R.id.btnReadLogs)
+        btnDeleteLogs = findViewById(R.id.btnDeleteLogs)
         tvFirstUseDate = findViewById(R.id.tvFirstUseDate)
         tvBatteryHealth = findViewById(R.id.tvBatteryHealth)
         tvChargeCycles = findViewById(R.id.tvChargeCycles)
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupListeners() {
         btnOpenSysDump.setOnClickListener { openSysDump() }
         btnReadLogs.setOnClickListener { readBatteryLogs() }
+        btnDeleteLogs.setOnClickListener { confirmDeleteLogs() }
     }
 
     private fun checkPermissions() {
@@ -160,64 +162,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun parseBatteryLogs(): Boolean {
-        val primaryFile = File("/storage/emulated/0/log/battery_service/battery_service_main_history")
-        if (primaryFile.exists() && parseBatteryServiceHistory(primaryFile)) return true
-
         val dumpDir = File("/storage/emulated/0/log/")
-        val dumpFiles = dumpDir.listFiles { f -> f.name.startsWith("dumpState_") && f.name.endsWith(".log") }
-        dumpFiles?.forEach { file ->
+        if (!dumpDir.exists()) return false
+        
+        val dumpFiles = dumpDir.listFiles { f -> 
+            f.name.startsWith("dumpState_") && f.name.endsWith(".log") 
+        }
+        
+        dumpFiles?.sortedByDescending { it.lastModified() }?.forEach { file ->
             if (parseDumpStateFile(file)) return true
         }
 
         return false
-    }
-
-    private fun parseBatteryServiceHistory(file: File): Boolean {
-        try {
-            val firstUseRegex = Regex("""# \[SS]\[BattInfo]FirstUseDateData saveInfoHistory\s+efsValue:(\d+)""")
-            val asocRegex = Regex("""# \[SS]\[BattInfo]AsocData saveInfoHistory\s+efsValue:(\d+)""")
-            val dischargeRegex = Regex("""# \[SS]\[BattInfo]DischargeLevelData saveInfoHistory\s+efsValue:(\d+)""")
-
-            RandomAccessFile(file, "r").use { raf ->
-                var pointer = raf.length() - 1
-                val sb = StringBuilder()
-                while (pointer >= 0) {
-                    raf.seek(pointer)
-                    val c = raf.read().toChar()
-                    if (c == '\n') {
-                        val line = sb.reverse().toString()
-                        sb.setLength(0)
-
-                        if (batteryStats.firstUseDate == null) firstUseRegex.find(line)?.let { batteryStats.firstUseDate = it.groupValues[1] }
-                        if (batteryStats.healthPercentage == -1) asocRegex.find(line)?.let { batteryStats.healthPercentage = it.groupValues[1].toInt() }
-                        if (batteryStats.chargeCycles == -1) dischargeRegex.find(line)?.let {
-                            val fullValue = it.groupValues[1].toInt()
-                            batteryStats.chargeCycles = fullValue / 100
-                        }
-
-                        if (batteryStats.isValid()) break
-                    } else {
-                        sb.append(c)
-                    }
-                    pointer--
-                }
-
-                if (!batteryStats.isValid() && sb.isNotEmpty()) {
-                    val line = sb.reverse().toString()
-                    if (batteryStats.firstUseDate == null) firstUseRegex.find(line)?.let { batteryStats.firstUseDate = it.groupValues[1] }
-                    if (batteryStats.healthPercentage == -1) asocRegex.find(line)?.let { batteryStats.healthPercentage = it.groupValues[1].toInt() }
-                    if (batteryStats.chargeCycles == -1) dischargeRegex.find(line)?.let {
-                        val fullValue = it.groupValues[1].toInt()
-                        batteryStats.chargeCycles = fullValue / 100
-                    }
-                }
-            }
-
-            return batteryStats.isValid()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
-        }
     }
 
     private fun parseDumpStateFile(file: File): Boolean {
@@ -241,25 +197,78 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayBatteryStats() {
-        tvFirstUseDate.text = batteryStats.firstUseDate?.let { "First Use: ${formatDate(it)}" } ?: "First Use: Not available"
-
-        if (batteryStats.healthPercentage != -1) {
-            tvBatteryHealth.text = "Battery Health: ${batteryStats.healthPercentage}%"
-            val color = when {
-                batteryStats.healthPercentage >= 80 -> android.R.color.holo_green_dark
-                batteryStats.healthPercentage >= 70 -> android.R.color.holo_orange_dark
-                else -> android.R.color.holo_red_dark
+    private fun confirmDeleteLogs() {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Logs")
+            .setMessage("Are you sure you want to delete all log files? This will free up storage space but you'll need to run SysDump again to read battery stats.")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteLogs()
             }
-            tvBatteryHealth.setTextColor(resources.getColor(color, null))
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteLogs() {
+        progressBar.visibility = View.VISIBLE
+        tvStatus.text = "Deleting logs..."
+        tvStatus.visibility = View.VISIBLE
+
+        scope.launch {
+            val result = withContext(Dispatchers.IO) {
+                try {
+                    val logDir = File("/storage/emulated/0/log/")
+                    if (logDir.exists() && logDir.isDirectory) {
+                        logDir.deleteRecursively()
+                        true
+                    } else {
+                        false
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    false
+                }
+            }
+
+            progressBar.visibility = View.GONE
+            if (result) {
+                tvStatus.text = "Logs deleted successfully!"
+                Toast.makeText(
+                    this@MainActivity,
+                    "Log files deleted successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
+                
+                // Clear displayed stats
+                batteryStats.firstUseDate = null
+                batteryStats.healthPercentage = -1
+                batteryStats.chargeCycles = -1
+                displayBatteryStats()
+            } else {
+                tvStatus.text = "Failed to delete logs"
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to delete logs. Directory may not exist.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun displayBatteryStats() {
+        tvFirstUseDate.text = batteryStats.firstUseDate?.let { 
+            "First Use: ${formatDate(it)}" 
+        } ?: "First Use: Not available"
+
+        tvBatteryHealth.text = if (batteryStats.healthPercentage != -1) {
+            "Battery Health: ${batteryStats.healthPercentage}%"
         } else {
-            tvBatteryHealth.text = "Battery Health: Not available"
+            "Battery Health: Not available"
         }
 
-        if (batteryStats.chargeCycles != -1) {
-            tvChargeCycles.text = "Charge Cycles: ${batteryStats.chargeCycles}"
+        tvChargeCycles.text = if (batteryStats.chargeCycles != -1) {
+            "Charge Cycles: ${batteryStats.chargeCycles}"
         } else {
-            tvChargeCycles.text = "Charge Cycles: Not available"
+            "Charge Cycles: Not available"
         }
     }
 
