@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Storage Permission Required")
             .setMessage("This app needs access to storage to read battery logs. Please grant 'All files access' permission.")
+            .setCancelable(false)
             .setPositiveButton("Grant Permission") { _, _ ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     try {
@@ -102,11 +103,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton("Cancel") { _, _ ->
-                Toast.makeText(
-                    this,
-                    "Permission denied. App may not work properly.",
-                    Toast.LENGTH_LONG
-                ).show()
+                finish() // exit the app immediately
             }
             .show()
     }
@@ -161,7 +158,6 @@ class MainActivity : AppCompatActivity() {
         val primaryFile = File("/storage/emulated/0/log/battery_service/battery_service_main_history")
         if (primaryFile.exists() && parseBatteryServiceHistory(primaryFile)) return true
 
-        // fallback to dumpState logs
         val dumpDir = File("/storage/emulated/0/log/")
         val dumpFiles = dumpDir.listFiles { f -> f.name.startsWith("dumpState_") && f.name.endsWith(".log") }
         dumpFiles?.forEach { file ->
@@ -171,7 +167,6 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    // Read battery_service_main_history backwards to get the latest values
     private fun parseBatteryServiceHistory(file: File): Boolean {
         try {
             val firstUseRegex = Regex("""# \[SS]\[BattInfo]FirstUseDateData saveInfoHistory\s+efsValue:(\d+)""")
@@ -281,14 +276,8 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(
-                    this,
-                    "Permission denied. App may not work properly.",
-                    Toast.LENGTH_LONG
-                ).show()
+            if (!(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                finish() // exit if user denies pre-R permission
             }
         }
     }
@@ -297,14 +286,8 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MANAGE_STORAGE_PERMISSION_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Permission denied. App may not work properly.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                if (!Environment.isExternalStorageManager()) {
+                    finish() // exit app if permission denied
                 }
             }
         }
