@@ -103,7 +103,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton("Cancel") { _, _ ->
-                finish() // exit the app immediately
+                Toast.makeText(
+                    this,
+                    "Permission not granted. App will exit.",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
             }
             .show()
     }
@@ -277,7 +282,12 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (!(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                finish() // exit if user denies pre-R permission
+                Toast.makeText(
+                    this,
+                    "Permission not granted. App will exit.",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
             }
         }
     }
@@ -287,7 +297,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == MANAGE_STORAGE_PERMISSION_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (!Environment.isExternalStorageManager()) {
-                    finish() // exit app if permission denied
+                    Toast.makeText(
+                        this,
+                        "Permission not granted. App will exit.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    finish()
                 }
             }
         }
