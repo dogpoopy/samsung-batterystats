@@ -180,13 +180,20 @@ class MainActivity : AppCompatActivity() {
         try {
             file.forEachLine { line ->
                 if (batteryStats.firstUseDate == null && line.contains("battery FirstUseDate:")) {
-                    batteryStats.firstUseDate = line.substringAfter("[").substringBefore("]")
+                    val value = extractValue(line)
+                    if (value.isNotEmpty() && value.matches(Regex("\\d{8}"))) {
+                        batteryStats.firstUseDate = value
+                    }
                 }
+                
                 if (batteryStats.healthPercentage == -1 && line.contains("mSavedBatteryAsoc:")) {
-                    batteryStats.healthPercentage = line.substringAfter("[").substringBefore("]").toIntOrNull() ?: -1
+                    val value = extractValue(line)
+                    batteryStats.healthPercentage = value.toIntOrNull() ?: -1
                 }
+                
                 if (batteryStats.chargeCycles == -1 && line.contains("mSavedBatteryUsage:")) {
-                    val fullValue = line.substringAfter("[").substringBefore("]").toIntOrNull() ?: -1
+                    val value = extractValue(line)
+                    val fullValue = value.toIntOrNull() ?: -1
                     if (fullValue != -1) batteryStats.chargeCycles = fullValue / 100
                 }
             }
@@ -195,6 +202,20 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
             return false
         }
+    }
+
+    private fun extractValue(line: String): String {
+        val bracketMatch = Regex("""\[([^\]]+)\]""").find(line)
+        if (bracketMatch != null) {
+            return bracketMatch.groupValues[1].trim()
+        }
+        
+        val colonIndex = line.indexOf(':')
+        if (colonIndex != -1) {
+            return line.substring(colonIndex + 1).trim()
+        }
+        
+        return ""
     }
 
     private fun confirmDeleteLogs() {
