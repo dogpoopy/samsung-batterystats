@@ -88,12 +88,12 @@
                     android:text="1️⃣ Tap 'OPEN SYSDUMP' button below"
                     android:textSize="14sp"
                     android:textColor="#555555"
-                    android:layout_marginBottom="6dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2️⃣ In SysDump, select 'Run dumpstate/logcat'"
+                    android:text="2️⃣ In SysDump, select 'Run dumpstate/logcat', wait 2-3 minutes, then select 'OK'"
                     android:textSize="14sp"
                     android:textColor="#555555"
                     android:layout_marginBottom="6dp"/>
@@ -101,23 +101,26 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="3️⃣ Wait 2-3 minutes for completion, then select 'OK'"
+                    android:text="3️⃣ Select 'Copy to sdcard(include CP Ramdump)'"
                     android:textSize="14sp"
                     android:textColor="#555555"
-                    android:layout_marginBottom="6dp"/>
-                    
-                <TextView
+                    android:layout_marginBottom="12dp"/>
+
+                <ImageView
+                    android:id="@+id/ivSysDumpInstructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4️⃣ Select 'Copy to sdcard(include CP Ramdump)'"
-                    android:textSize="14sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="6dp"/>
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/sysdump_instructions"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:contentDescription="SysDump Screen"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="5️⃣ Return here and tap 'READ BATTERY LOGS'"
+                    android:text="4️⃣ Return here and tap 'READ BATTERY LOGS'"
                     android:textSize="14sp"
                     android:textColor="#555555"/>
 
