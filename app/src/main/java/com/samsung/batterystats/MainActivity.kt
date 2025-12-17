@@ -175,6 +175,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readBatteryLogs() {
+        val dumpDir = File("/storage/emulated/0/log/")
+        if (!dumpDir.exists()) {
+            tvStatus.text = "Log files not found. Please run SysDump first."
+            tvStatus.visibility = View.VISIBLE
+            Toast.makeText(
+                this,
+                "No log directory found. Please complete SysDump steps 1-3 first.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        val dumpFiles = dumpDir.listFiles { f -> 
+            f.name.startsWith("dumpState_") && f.name.endsWith(".log") 
+        }
+        
+        if (dumpFiles == null || dumpFiles.isEmpty()) {
+            tvStatus.text = "No log files found. Please run SysDump first."
+            tvStatus.visibility = View.VISIBLE
+            Toast.makeText(
+                this,
+                "No dump files found. Please complete SysDump steps 1-3 first.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         progressBar.visibility = View.VISIBLE
         tvStatus.text = "Reading battery logs..."
         tvStatus.visibility = View.VISIBLE
@@ -187,10 +214,10 @@ class MainActivity : AppCompatActivity() {
                 displayBatteryStats()
                 tvStatus.text = "Battery stats loaded successfully!"
             } else {
-                tvStatus.text = "Failed to read logs. Please ensure you've run SysDump first."
+                tvStatus.text = "Failed to parse battery data from logs."
                 Toast.makeText(
                     this@MainActivity,
-                    "Log file not found or couldn't be read. Please run SysDump first.",
+                    "Could not extract battery information from logs.",
                     Toast.LENGTH_LONG
                 ).show()
             }
