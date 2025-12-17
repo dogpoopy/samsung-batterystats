@@ -3,30 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#121212">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Samsung Battery Stats"
-            android:textSize="28sp"
+            android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="#1976D2"
+            android:textColor="#FFFFFF"
             android:gravity="center"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Check your battery health and usage"
+            android:text="Check your battery information"
             android:textSize="14sp"
-            android:textColor="#757575"
+            android:textColor="#B0B0B0"
             android:gravity="center"
             android:layout_marginBottom="32dp"/>
 
@@ -34,10 +35,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="#FFF9E6">
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#1E1E1E">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,12 +47,19 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ℹ️"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="ℹ️ Battery data is extracted from the system logs report and represents an estimation. Actual values may vary."
+                    android:text="Battery data is extracted from system logs."
                     android:textSize="13sp"
-                    android:textColor="#856404"
+                    android:textColor="#B0B0B0"
                     android:lineSpacingExtra="2dp"/>
 
             </LinearLayout>
@@ -63,9 +71,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#1E1E1E">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,17 +85,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📋 How to Use"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp"/>
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1️⃣ Tap 'OPEN SYSDUMP' button below"
                     android:textSize="14sp"
-                    android:textColor="#555555"
+                    android:textColor="#E0E0E0"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
@@ -95,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:text="2️⃣ In SysDump, select 'Run dumpstate/logcat', wait 2-3 minutes, then select 'OK'"
                     android:textSize="14sp"
-                    android:textColor="#555555"
+                    android:textColor="#E0E0E0"
                     android:layout_marginBottom="6dp"/>
 
                 <TextView
@@ -103,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:text="3️⃣ Select 'Copy to sdcard(include CP Ramdump)'"
                     android:textSize="14sp"
-                    android:textColor="#555555"
+                    android:textColor="#E0E0E0"
                     android:layout_marginBottom="12dp"/>
 
                 <ImageView
@@ -122,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:text="4️⃣ Return here and tap 'READ BATTERY LOGS'"
                     android:textSize="14sp"
-                    android:textColor="#555555"/>
+                    android:textColor="#E0E0E0"/>
 
             </LinearLayout>
 
@@ -138,8 +146,7 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/button_primary"
-            android:layout_marginBottom="12dp"
-            android:elevation="2dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnReadLogs"
@@ -148,10 +155,9 @@
             android:text="Read Battery Logs"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#1976D2"
+            android:textColor="#FFFFFF"
             android:background="@drawable/button_secondary"
-            android:layout_marginBottom="12dp"
-            android:elevation="2dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDeleteLogs"
@@ -160,10 +166,9 @@
             android:text="Delete Log Files"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#D32F2F"
+            android:textColor="#FFFFFF"
             android:background="@drawable/button_delete"
-            android:layout_marginBottom="24dp"
-            android:elevation="2dp"/>
+            android:layout_marginBottom="24dp"/>
 
         <!-- Progress Bar -->
         <ProgressBar
@@ -171,7 +176,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:indeterminateTint="#BB86FC"/>
 
         <!-- Status Text -->
         <TextView
@@ -180,7 +186,7 @@
             android:layout_height="wrap_content"
             android:text="Ready to read battery stats"
             android:textSize="14sp"
-            android:textColor="#757575"
+            android:textColor="#B0B0B0"
             android:gravity="center"
             android:layout_marginBottom="24dp"
             android:visibility="visible"/>
@@ -189,9 +195,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#1E1E1E">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,15 +209,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📊 Battery Statistics"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#E0E0E0"
+                    android:background="#2C2C2C"
                     android:layout_marginBottom="16dp"/>
 
                 <TextView
@@ -220,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:text="First Use: --"
                     android:textSize="16sp"
-                    android:textColor="#333333"
+                    android:textColor="#E0E0E0"
                     android:padding="8dp"
                     android:layout_marginBottom="8dp"/>
 
@@ -230,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:text="Battery Health: --"
                     android:textSize="16sp"
-                    android:textColor="#333333"
+                    android:textColor="#E0E0E0"
                     android:padding="8dp"
                     android:layout_marginBottom="8dp"/>
 
@@ -240,7 +246,7 @@
                     android:layout_height="wrap_content"
                     android:text="Charge Cycles: --"
                     android:textSize="16sp"
-                    android:textColor="#333333"
+                    android:textColor="#E0E0E0"
                     android:padding="8dp"/>
 
             </LinearLayout>
@@ -253,7 +259,7 @@
             android:layout_height="wrap_content"
             android:text="⚠️ This app only works on Samsung devices with SysDump access"
             android:textSize="12sp"
-            android:textColor="#757575"
+            android:textColor="#808080"
             android:gravity="center"
             android:layout_marginTop="24dp"
             android:padding="8dp"/>
