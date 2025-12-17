@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupListeners() {
         btnOpenSysDump.setOnClickListener { openSysDump() }
         btnReadLogs.setOnClickListener { readBatteryLogs() }
-        btnDeleteLogs.setOnClickListener { confirmDeleteLogs() }
+        btnDeleteLogs.setOnClickListener { openSysDumpForDeletion() }
     }
 
     private fun checkPermissions() {
@@ -129,6 +129,30 @@ class MainActivity : AppCompatActivity() {
                     2. Wait 2-3 minutes until completion and select 'OK'
                     3. Now, select 'Copy to sdcard(include CP Ramdump)'
                     4. Come back to this app and tap 'Read Battery Logs'
+                    """.trimIndent()
+                )
+                .setPositiveButton("Got it", null)
+                .show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error opening dialer: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openSysDumpForDeletion() {
+        try {
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:${Uri.encode("*#9900#")}")
+            startActivity(intent)
+
+            AlertDialog.Builder(this)
+                .setTitle("Delete Log Files")
+                .setMessage(
+                    """
+                    In SysDump menu, tap 'Delete dumpstate/logcat'
+                    
+                    This will immediately delete the log files and free up storage space.
+                    
+                    Note: You'll need to run Step 2-3 again to read battery stats after deletion.
                     """.trimIndent()
                 )
                 .setPositiveButton("Got it", null)
@@ -216,63 +240,6 @@ class MainActivity : AppCompatActivity() {
         }
         
         return ""
-    }
-
-    private fun confirmDeleteLogs() {
-        AlertDialog.Builder(this)
-            .setTitle("Delete Logs")
-            .setMessage("Are you sure you want to delete all log files? This will free up storage space but you'll need to run SysDump again to read battery stats.")
-            .setPositiveButton("Delete") { _, _ ->
-                deleteLogs()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun deleteLogs() {
-        progressBar.visibility = View.VISIBLE
-        tvStatus.text = "Deleting logs..."
-        tvStatus.visibility = View.VISIBLE
-
-        scope.launch {
-            val result = withContext(Dispatchers.IO) {
-                try {
-                    val logDir = File("/storage/emulated/0/log/")
-                    if (logDir.exists() && logDir.isDirectory) {
-                        logDir.deleteRecursively()
-                        true
-                    } else {
-                        false
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    false
-                }
-            }
-
-            progressBar.visibility = View.GONE
-            if (result) {
-                tvStatus.text = "Logs deleted successfully!"
-                Toast.makeText(
-                    this@MainActivity,
-                    "Log files deleted successfully",
-                    Toast.LENGTH_SHORT
-                ).show()
-                
-                // Clear displayed stats
-                batteryStats.firstUseDate = null
-                batteryStats.healthPercentage = -1
-                batteryStats.chargeCycles = -1
-                displayBatteryStats()
-            } else {
-                tvStatus.text = "Failed to delete logs"
-                Toast.makeText(
-                    this@MainActivity,
-                    "Failed to delete logs. Directory may not exist.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
     }
 
     private fun displayBatteryStats() {
