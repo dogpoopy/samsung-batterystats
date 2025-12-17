@@ -139,24 +139,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openSysDumpForDeletion() {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Log Files")
+            .setMessage(
+                """
+                1. After opening SysDump, tap 'Delete dumpstate/logcat'
+                
+                2. This will delete the log files and free up storage space.
+                
+                3. You'll need to run SysDump (Step 1-3) again to read battery stats after deletion.
+                
+                Ready to proceed to SysDump?
+                """.trimIndent()
+            )
+            .setPositiveButton("Open SysDump") { _, _ ->
+                launchSysDumpForDeletion()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun launchSysDumpForDeletion() {
         try {
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:${Uri.encode("*#9900#")}")
             startActivity(intent)
-
-            AlertDialog.Builder(this)
-                .setTitle("Delete Log Files")
-                .setMessage(
-                    """
-                    In SysDump menu, tap 'Delete dumpstate/logcat'
-                    
-                    This will immediately delete the log files and free up storage space.
-                    
-                    Note: You'll need to run Step 2-3 again to read battery stats after deletion.
-                    """.trimIndent()
-                )
-                .setPositiveButton("Got it", null)
-                .show()
+            Toast.makeText(
+                this, 
+                "Tap 'Delete dumpstate/logcat'", 
+                Toast.LENGTH_SHORT
+            ).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error opening dialer: ${e.message}", Toast.LENGTH_SHORT).show()
         }
