@@ -2,10 +2,22 @@ name: Build
 
 on:
   workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build Type'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      version:
+        description: 'Version for release'
+        required: false
+        default: '1.0'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -18,13 +30,61 @@ jobs:
         java-version: 17
         cache: 'gradle'
 
-    - name: Build with Gradle
+    - name: Version for release
+      if: github.event.inputs.build_type == 'release'
       run: |
-       chmod +x gradlew
-       ./gradlew assembleDebug
+        # Convert version name to version code (e.g., 1.0 -> 10, 1.0.1 -> 101, 1.1 -> 11, 2.0 -> 20)
+        VERSION="${{ github.event.inputs.version }}"
+        VERSION_CODE=$(echo $VERSION | awk -F. '{printf "%d%02d%02d", $1, (NF>1)?$2:0, (NF>2)?$3:0}')
+        
+        sed -i "s/versionCode = [0-9]*/versionCode = $VERSION_CODE/" app/build.gradle.kts
+        sed -i "s/versionName = \".*\"/versionName = \"$VERSION\"/" app/build.gradle.kts
+        echo "Updated to version $VERSION (code: $VERSION_CODE)"
+
+    - name: Create signing files
+      if: github.event.inputs.build_type == 'release'
+      run: |
+        mkdir -p ~/.gradle
+        echo "${{ secrets.KEYSTORE_SECRET }}" | base64 -d > ~/key.jks
+        echo "RELEASE_STORE_FILE=$(realpath ~/key.jks)" > ~/.gradle/gradle.properties
+        echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PWD }}" >> ~/.gradle/gradle.properties
+        echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> ~/.gradle/gradle.properties
+        echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PWD }}" >> ~/.gradle/gradle.properties
+
+    - name: Build Debug APK
+      if: github.event.inputs.build_type == 'debug'
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleDebug
        
-    - name: Upload APK
+    - name: Build Release APK
+      if: github.event.inputs.build_type == 'release'
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleRelease
+       
+    - name: Upload Debug APK
+      if: github.event.inputs.build_type == 'debug'
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug.apk
+        name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
+
+    - name: Create Release
+      if: github.event.inputs.build_type == 'release'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        name: Release ${{ github.event.inputs.version }}
+        files: app/build/outputs/apk/release/app-release.apk
+        draft: false
+        prerelease: false
+        body: |
+          ## Samsung Battery Stats v${{ github.event.inputs.version }}
+          
+          ### Installation
+          1. Download `app-release.apk`
+          2. Enable "Install from unknown sources" if needed
+          3. Install and enjoy!
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
