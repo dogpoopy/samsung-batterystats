@@ -77,10 +77,10 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Battery Health Metrics")
             .setMessage(
                 """
-                mSavedBatteryAsoc (Absolute State of Charge):
+                ASOC (Absolute State of Charge):
                 Reflects charge calibration accuracy, not long-term health.
                 
-                mSavedBatteryBsoh (Battery State of Health):
+                BSOH (Battery State of Health):
                 Indicates the overall health of the battery compared to its original design capacity.
                 """.trimIndent()
             )
@@ -301,25 +301,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayBatteryStats() {
         tvFirstUseDate.text = batteryStats.firstUseDate?.let { 
-            "First Use: ${formatDate(it)}" 
-        } ?: "First Use: Not available"
+            formatDate(it) 
+        } ?: "Not available"
 
         tvBatteryHealthAsoc.text = if (batteryStats.asocPercentage != -1) {
             "ASOC: ${batteryStats.asocPercentage}%"
         } else {
-            "ASOC: Not available"
+            "ASOC: --"
         }
 
+        // Removed % sign as requested
         tvBatteryHealthBsoh.text = if (batteryStats.bsohPercentage != -1.0) {
-            "BSOH: ${String.format(Locale.US, "%.2f", batteryStats.bsohPercentage)}%"
+            "BSOH: ${String.format(Locale.US, "%.2f", batteryStats.bsohPercentage)}"
         } else {
-            "BSOH: Not available"
+            "BSOH: --"
         }
 
         tvChargeCycles.text = if (batteryStats.chargeCycles != -1) {
-            "Charge Cycles: ${batteryStats.chargeCycles}"
+            batteryStats.chargeCycles.toString()
         } else {
-            "Charge Cycles: Not available"
+            "Not available"
         }
     }
 
