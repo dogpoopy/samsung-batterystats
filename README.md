@@ -14,6 +14,9 @@ This app was built entirely on my phone using GitHub Actions with the help of AI
 
 - Download the APK in [releases](https://github.com/dogpoopy/samsung-batterystats/releases)
 
+## ⚠️ Important Storage Warning
+This app's method dumps a large batch of system log files into your storage. It is recommended to **'Delete dumpstate/logcat'** after every use!
+
 ## ⚠️ Important Compatibility Note:
 ~~This project is not working on One UI 8.5 and above. Recent security updates in Samsung's firmware now restrict SysDump access, requiring elevated permissions that are no longer accessible by dialing *#9900# or to a standard applications.~~
 
