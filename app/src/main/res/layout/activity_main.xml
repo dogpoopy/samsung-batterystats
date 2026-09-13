@@ -31,7 +31,6 @@
             android:gravity="center"
             android:layout_marginBottom="32dp"/>
 
-        <!-- Disclaimer Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +65,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Instructions Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +91,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1️⃣ Tap 'OPEN SYSDUMP' button below"
+                    android:text="1️⃣ Tap 'OPEN SYSDUMP' below, then type '#' at the end of *#9900 in the dialer"
                     android:textSize="14sp"
                     android:textColor="#E0E0E0"
                     android:layout_marginBottom="12dp"/>
@@ -130,13 +128,21 @@
                     android:layout_height="wrap_content"
                     android:text="4️⃣ Return here and tap 'READ BATTERY LOGS'"
                     android:textSize="14sp"
-                    android:textColor="#E0E0E0"/>
+                    android:textColor="#E0E0E0"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="⚠️ Note: Auto Blocker must be turned OFF in Settings > Security and privacy for SysDump to work."
+                    android:textSize="13sp"
+                    android:textColor="#FFB74D"
+                    android:lineSpacingExtra="2dp"/>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Action Buttons -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnOpenSysDump"
             android:layout_width="match_parent"
@@ -170,7 +176,6 @@
             android:background="@drawable/button_delete"
             android:layout_marginBottom="24dp"/>
 
-        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="match_parent"
@@ -179,7 +184,6 @@
             android:layout_marginBottom="16dp"
             android:indeterminateTint="#BB86FC"/>
 
-        <!-- Status Text -->
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
@@ -191,7 +195,6 @@
             android:layout_marginBottom="24dp"
             android:visibility="visible"/>
 
-        <!-- Battery Stats Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -253,7 +256,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Info Note -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
