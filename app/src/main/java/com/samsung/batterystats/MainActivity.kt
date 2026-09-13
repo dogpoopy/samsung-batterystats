@@ -33,7 +33,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnReadLogs: Button
     private lateinit var btnDeleteLogs: Button
     private lateinit var tvFirstUseDate: TextView
-    private lateinit var tvBatteryHealth: TextView
+    private lateinit var tvBatteryHealthAsoc: TextView
+    private lateinit var tvBatteryHealthBsoh: TextView
+    private lateinit var tvBatteryHealthInfo: TextView
     private lateinit var tvChargeCycles: TextView
     private lateinit var tvStatus: TextView
     private lateinit var progressBar: ProgressBar
@@ -55,7 +57,9 @@ class MainActivity : AppCompatActivity() {
         btnReadLogs = findViewById(R.id.btnReadLogs)
         btnDeleteLogs = findViewById(R.id.btnDeleteLogs)
         tvFirstUseDate = findViewById(R.id.tvFirstUseDate)
-        tvBatteryHealth = findViewById(R.id.tvBatteryHealth)
+        tvBatteryHealthAsoc = findViewById(R.id.tvBatteryHealthAsoc)
+        tvBatteryHealthBsoh = findViewById(R.id.tvBatteryHealthBsoh)
+        tvBatteryHealthInfo = findViewById(R.id.tvBatteryHealthInfo)
         tvChargeCycles = findViewById(R.id.tvChargeCycles)
         tvStatus = findViewById(R.id.tvStatus)
         progressBar = findViewById(R.id.progressBar)
@@ -65,6 +69,23 @@ class MainActivity : AppCompatActivity() {
         btnOpenSysDump.setOnClickListener { openSysDump() }
         btnReadLogs.setOnClickListener { readBatteryLogs() }
         btnDeleteLogs.setOnClickListener { openSysDumpForDeletion() }
+        tvBatteryHealthInfo.setOnClickListener { showBatteryHealthInfoDialog() }
+    }
+
+    private fun showBatteryHealthInfoDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Battery Health Metrics")
+            .setMessage(
+                """
+                ASOC (Absolute State of Charge):
+                Reflects charge calibration accuracy, not long-term health.
+                
+                BSOH (Battery State of Health):
+                Indicates the overall health of the battery compared to its original design capacity.
+                """.trimIndent()
+            )
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun checkPermissions() {
@@ -241,9 +262,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 
-                if (batteryStats.healthPercentage == -1 && line.contains("mSavedBatteryAsoc:")) {
+                if (batteryStats.asocPercentage == -1 && line.contains("mSavedBatteryAsoc:")) {
                     val value = extractValue(line)
-                    batteryStats.healthPercentage = value.toIntOrNull() ?: -1
+                    batteryStats.asocPercentage = value.toIntOrNull() ?: -1
+                }
+
+                if (batteryStats.bsohPercentage == -1.0 && line.contains("mSavedBatteryBsoh:")) {
+                    val value = extractValue(line)
+                    batteryStats.bsohPercentage = value.toDoubleOrNull() ?: -1.0
                 }
                 
                 if (batteryStats.chargeCycles == -1 && line.contains("mSavedBatteryUsage:")) {
@@ -275,19 +301,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayBatteryStats() {
         tvFirstUseDate.text = batteryStats.firstUseDate?.let { 
-            "First Use: ${formatDate(it)}" 
-        } ?: "First Use: Not available"
+            formatDate(it) 
+        } ?: "Not available"
 
-        tvBatteryHealth.text = if (batteryStats.healthPercentage != -1) {
-            "Battery Health: ${batteryStats.healthPercentage}%"
+        tvBatteryHealthAsoc.text = if (batteryStats.asocPercentage != -1) {
+            "ASOC: ${batteryStats.asocPercentage}%"
         } else {
-            "Battery Health: Not available"
+            "ASOC: --"
+        }
+
+        tvBatteryHealthBsoh.text = if (batteryStats.bsohPercentage != -1.0) {
+            "BSOH: ${String.format(Locale.US, "%.2f", batteryStats.bsohPercentage)}"
+        } else {
+            "BSOH: --"
         }
 
         tvChargeCycles.text = if (batteryStats.chargeCycles != -1) {
-            "Charge Cycles: ${batteryStats.chargeCycles}"
+            batteryStats.chargeCycles.toString()
         } else {
-            "Charge Cycles: Not available"
+            "Not available"
         }
     }
 
@@ -344,10 +376,11 @@ class MainActivity : AppCompatActivity() {
 
 data class BatteryStats(
     var firstUseDate: String? = null,
-    var healthPercentage: Int = -1,
+    var asocPercentage: Int = -1,
+    var bsohPercentage: Double = -1.0,
     var chargeCycles: Int = -1
 ) {
     fun isValid(): Boolean {
-        return firstUseDate != null || healthPercentage != -1 || chargeCycles != -1
+        return firstUseDate != null || asocPercentage != -1 || bsohPercentage != -1.0 || chargeCycles != -1
     }
 }

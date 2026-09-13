@@ -223,34 +223,132 @@
                     android:background="#2C2C2C"
                     android:layout_marginBottom="16dp"/>
 
-                <TextView
-                    android:id="@+id/tvFirstUseDate"
+                <!-- First Use -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="First Use: --"
-                    android:textSize="16sp"
-                    android:textColor="#E0E0E0"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
-                <TextView
-                    android:id="@+id/tvBatteryHealth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Battery Health: --"
-                    android:textSize="16sp"
-                    android:textColor="#E0E0E0"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="First Use"
+                        android:textSize="15sp"
+                        android:textColor="#A0A0A0" />
 
-                <TextView
-                    android:id="@+id/tvChargeCycles"
+                    <TextView
+                        android:id="@+id/tvFirstUseDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#2C2C2C" />
+
+                <!-- Battery Health -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Charge Cycles: --"
-                    android:textSize="16sp"
-                    android:textColor="#E0E0E0"
-                    android:padding="8dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Battery Health"
+                            android:textSize="15sp"
+                            android:textColor="#A0A0A0" />
+
+                        <TextView
+                            android:id="@+id/tvBatteryHealthInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ⓘ"
+                            android:textSize="16sp"
+                            android:textColor="#BB86FC"
+                            android:paddingStart="6dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/tvBatteryHealthAsoc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ASOC: --"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+
+                        <TextView
+                            android:id="@+id/tvBatteryHealthBsoh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BSOH: --"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#2C2C2C" />
+
+                <!-- Charge Cycles -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Charge Cycles"
+                        android:textSize="15sp"
+                        android:textColor="#A0A0A0" />
+
+                    <TextView
+                        android:id="@+id/tvChargeCycles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
 
             </LinearLayout>
 
