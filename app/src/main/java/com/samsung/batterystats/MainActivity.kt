@@ -120,22 +120,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:${Uri.encode("*#9900")}")
             startActivity(intent)
-
-            AlertDialog.Builder(this)
-                .setTitle("Instructions")
-                .setMessage(
-                    """
-                    1. Type '#' at the end of *#9900 in the dialer.
-                    2. Tap 'Run dumpstate/logcat'
-                    3. Wait 2-3 minutes until completion and select 'OK'
-                    4. Select 'Copy to sdcard(include CP Ramdump)'
-                    5. Come back to this app and tap 'Read Battery Logs'
-
-                    Note: Auto Blocker must be turned OFF in Settings > Security and privacy to make this work.
-                    """.trimIndent()
-                )
-                .setPositiveButton("Got it", null)
-                .show()
+            Toast.makeText(
+                this, 
+                "Type '#' at the end to continue", 
+                Toast.LENGTH_LONG
+            ).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error opening dialer: ${e.message}", Toast.LENGTH_SHORT).show()
         }
