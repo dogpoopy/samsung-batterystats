@@ -233,15 +233,61 @@
                     android:padding="8dp"
                     android:layout_marginBottom="8dp"/>
 
-                <TextView
-                    android:id="@+id/tvBatteryHealth"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Battery Health: --"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Battery Health"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#E0E0E0" />
+
+                    <TextView
+                        android:id="@+id/tvBatteryHealthInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ⓘ"
+                        android:textSize="20sp"
+                        android:textColor="#BB86FC"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvBatteryHealthAsoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ASOC: --"
                     android:textSize="16sp"
                     android:textColor="#E0E0E0"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tvBatteryHealthBsoh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="BSOH: --"
+                    android:textSize="16sp"
+                    android:textColor="#E0E0E0"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tvChargeCycles"
