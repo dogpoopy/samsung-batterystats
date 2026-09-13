@@ -118,21 +118,13 @@ class MainActivity : AppCompatActivity() {
     private fun openSysDump() {
         try {
             val intent = Intent(Intent.ACTION_DIAL)
-            intent.data = Uri.parse("tel:${Uri.encode("*#9900#")}")
+            intent.data = Uri.parse("tel:${Uri.encode("*#9900")}")
             startActivity(intent)
-
-            AlertDialog.Builder(this)
-                .setTitle("Instructions")
-                .setMessage(
-                    """
-                    1. Tap 'Run dumpstate/logcat'
-                    2. Wait 2-3 minutes until completion and select 'OK'
-                    3. Now, select 'Copy to sdcard(include CP Ramdump)'
-                    4. Come back to this app and tap 'Read Battery Logs'
-                    """.trimIndent()
-                )
-                .setPositiveButton("Got it", null)
-                .show()
+            Toast.makeText(
+                this, 
+                "Type '#' at the end to continue", 
+                Toast.LENGTH_LONG
+            ).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error opening dialer: ${e.message}", Toast.LENGTH_SHORT).show()
         }
@@ -162,12 +154,12 @@ class MainActivity : AppCompatActivity() {
     private fun launchSysDumpForDeletion() {
         try {
             val intent = Intent(Intent.ACTION_DIAL)
-            intent.data = Uri.parse("tel:${Uri.encode("*#9900#")}")
+            intent.data = Uri.parse("tel:${Uri.encode("*#9900")}")
             startActivity(intent)
             Toast.makeText(
                 this, 
-                "Tap 'Delete dumpstate/logcat'", 
-                Toast.LENGTH_SHORT
+                "Type '#' at the end, then tap 'Delete dumpstate/logcat'", 
+                Toast.LENGTH_LONG
             ).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error opening dialer: ${e.message}", Toast.LENGTH_SHORT).show()
