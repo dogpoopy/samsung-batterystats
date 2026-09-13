@@ -15,4 +15,9 @@ This app was built entirely on my phone using GitHub Actions with the help of AI
 - Download the APK in [releases](https://github.com/dogpoopy/samsung-batterystats/releases)
 
 ## ⚠️ Important Compatibility Note:
-This project is not working on One UI 8.5 and above. Recent security updates in Samsung's firmware now restrict SysDump access, requiring elevated permissions that are no longer accessible by dialing *#9900# or to a standard applications.
+~~This project is not working on One UI 8.5 and above. Recent security updates in Samsung's firmware now restrict SysDump access, requiring elevated permissions that are no longer accessible by dialing *#9900# or to a standard applications.~~
+
+**Update:** SysDump is still accessible on One UI 8.5 using a simple workaround (Updated app instructions):
+
+1. **Turn off Auto Blocker**: Go to **Settings > Security and privacy > Auto Blocker** and toggle it **Off** (Auto Blocker prevents hidden secret codes from executing).
+2. **Manual `#` Input**: The app will send `*#9900` to your stock dialer. Manually type the final `#` character in your keypad to trigger the SysDump menu.
